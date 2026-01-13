@@ -1,0 +1,64 @@
+Abstract
+The AI-Powered Ticket Management System is a comprehensive web application designed to streamline customer support operations. It leverages Artificial Intelligence (specifically Google Gemini) to automatically categorize, categorize, and prioritize support tickets. The system intelligently analyzes ticket content to identify required skills and routes them to the most suitable moderators. It features a robust backend for processing and a modern frontend for user interaction, ensuring efficient issue resolution and improved workflow automation.
+
+Functional Requirements
+
+1. User Registration
+Description: Allows new users to create an account in the system.
+Input: Username, Email, Password.
+Output: User account created, Success message.
+
+2. User Login
+Description: Authenticates existing users and provides access to the system.
+Input: Email, Password.
+Output: Authentication Token (JWT), Access to user dashboard.
+
+3. Ticket Creation
+Description: Enables users to submit a new support ticket describing their issue.
+Input: Ticket Title, Ticket Description.
+Output: New ticket record created in the database, automated trigger for AI processing.
+
+4. AI Ticket Analysis (Background Process)
+Description: Automatically analyzes the content of a newly created ticket using the Google Gemini API.
+Input: Ticket Title, Ticket Description.
+Output: Enriched ticket data including categorization, priority level, required skills, and helpful notes for the moderator.
+
+5. Intelligent Moderator Assignment (System Process)
+Description: Matches the ticket to the most appropriate moderator based on the skills identified by the AI.
+Input: Enriched Ticket Data (Skills), List of Available Moderators and their Skills.
+Output: Ticket assigned to a specific moderator (or Admin fallback), database update with assignment details.
+
+6. Moderator Notification
+Description: Notifies the assigned moderator about the new ticket.
+Input: Assignment Event, Ticket Details, Moderator Email Address.
+Output: Email sent to the moderator containing ticket info and AI-generated notes.
+
+7. View Tickets
+Description: Allows users and moderators to view their assigned or created tickets.
+Input: User ID / Token.
+Output: List of tickets relevant to the user/moderator.
+
+8. Admin User Management
+Description: Enables administrators to manage user roles and capabilities.
+Input: User ID, Target Role (e.g., Moderator, Admin), Skills List.
+Output: Updated user profile with new roles and skills.
+
+Non-Functional Requirements
+
+Tools & Technology Stack:
+- Runtime Environment: Node.js (v14 or higher)
+- Frontend Framework: React (v19.1.0) with Vite
+- Styling: TailwindCSS (v4.1.8) and DaisyUI
+- Backend Framework: Express.js
+- Database: MongoDB
+- Authentication Service: JSON Web Tokens (JWT)
+- Background Processing / Event Queue: Inngest
+- AI Service: Google Gemini API
+- Email Service: Nodemailer with Mailtrap (for testing)
+- Development Tools: Nodemon (hot reloading), ESLint (linting)
+- Language: JavaScript
+
+Performance & Reliability:
+- The system should support asynchronous processing to prevent blocking user interactions during AI analysis.
+- Database connections must handle concurrent requests efficiently.
+- Secure handling of sensitive environment variables (API keys, DB URIs).
