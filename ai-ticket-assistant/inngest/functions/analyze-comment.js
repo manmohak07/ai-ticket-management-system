@@ -1,6 +1,10 @@
 import { inngest } from "../client.js";
 import Ticket from "../../models/ticket.js";
-import { createAgent, gemini } from "@inngest/agent-kit";
+import OpenAI from "openai";
+
+const token = process.env["GITHUB_TOKEN"];
+const endpoint = "https://models.github.ai/inference";
+const modelName = "openai/gpt-4o-mini";
 
 export const analyzeComment = inngest.createFunction(
     { id: "analyze-comment", retries: 1 },
@@ -18,14 +22,7 @@ export const analyzeComment = inngest.createFunction(
             }
 
             // AI Analysis
-            // Note: agent.run() uses Inngest steps internally. Do NOT wrap in step.run().
-            const agent = createAgent({
-                model: gemini({
-                    model: "gemini-2.0-flash",
-                    apiKey: process.env.GEMINI_API_KEY,
-                }),
-                name: "Comment Analyzer",
-            });
+            const client = new OpenAI({ baseURL: endpoint, apiKey: token });
 
             const prompt = `Analyze this comment from an assignee working on a support ticket.
 
@@ -43,8 +40,16 @@ Determine if this comment indicates:
 
 Respond ONLY with one of these exact words: COMPLETE, IN_PROGRESS, NEEDS_INFO, or RETURNED`;
 
-            const response = await agent.run(prompt);
-            const output = response.output?.toUpperCase() || "";
+            const response = await client.chat.completions.create({
+                messages: [
+                    { role: "system", content: "You are a ticket analysis assistant." },
+                    { role: "user", content: prompt }
+                ],
+                temperature: 0.1,
+                model: modelName
+            });
+
+            const output = response.choices[0].message.content?.toUpperCase() || "";
 
             let analysis = "IN_PROGRESS";
             if (output.includes("COMPLETE")) analysis = "COMPLETE";
