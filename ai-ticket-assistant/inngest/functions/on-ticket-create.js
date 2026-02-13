@@ -10,6 +10,7 @@ export const onTicketCreated = inngest.createFunction(
   async ({ event, step }) => {
     try {
       const { ticketId } = event.data;
+      console.log(`[Inngest]: Received ticket/created event for ID: ${ticketId}`);
 
       const ticket = await step.run("fetch-ticket", async () => {
         const ticketObject = await Ticket.findById(ticketId);
@@ -24,9 +25,9 @@ export const onTicketCreated = inngest.createFunction(
       });
 
       // 2. AI Analysis
-      // Note: analyzeTicket uses Inngest Agent Kit which manages its own steps.
-      // Do NOT wrap it in step.run() as nesting steps is not supported.
-      const aiResponse = await analyzeTicket(ticket);
+      const aiResponse = await step.run("analyze-ticket-content", async () => {
+        return await analyzeTicket(ticket);
+      });
 
       const skillsFound = await step.run("ai-processing", async () => {
         const updateData = {
@@ -66,7 +67,10 @@ export const onTicketCreated = inngest.createFunction(
         }
 
         if (assignee) {
+          console.log(`[Inngest]: Assigning ticket ${ticket._id} to ${assignee.email} (${assignee.role})`);
           await Ticket.findByIdAndUpdate(ticket._id, { assignedTo: assignee._id });
+        } else {
+          console.warn(`[Inngest]: No assignee found for ticket ${ticket._id}`);
         }
         return assignee;
       });

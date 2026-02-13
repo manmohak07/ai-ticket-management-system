@@ -9,6 +9,7 @@ import TicketDetailsPage from "./pages/ticket.jsx";
 import Login from "./pages/login.jsx";
 import Signup from "./pages/signup.jsx";
 import Admin from "./pages/admin.jsx";
+import Analytics from "./pages/analytics.jsx";
 import Landing from "./pages/landing.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -60,6 +61,14 @@ createRoot(document.getElementById("root")).render(
           element={
             <CheckAuth protected={true}>
               <Admin />
+            </CheckAuth>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <CheckAuth protected={true}>
+              <Analytics />
             </CheckAuth>
           }
         />

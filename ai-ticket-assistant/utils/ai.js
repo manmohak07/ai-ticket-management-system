@@ -1,11 +1,15 @@
 import OpenAI from "openai";
 
-const token = process.env["GITHUB_TOKEN"];
-const endpoint = "https://models.github.ai/inference";
-const modelName = "openai/gpt-4o-mini";
-
 const analyzeTicket = async (ticket) => {
+  const token = process.env["GITHUB_TOKEN"];
+  const endpoint = "https://models.github.ai/inference";
+  const modelName = "openai/gpt-4o-mini";
   const client = new OpenAI({ baseURL: endpoint, apiKey: token });
+
+  console.log(`[AI Agent]: Starting analysis for ticket: "${ticket.title}"`);
+  if (!token) {
+    console.error("[AI Agent]: GITHUB_TOKEN is missing! Analysis will likely fail.");
+  }
 
   const systemPrompt = `You are an expert AI assistant that processes technical support tickets. 
 
@@ -52,6 +56,7 @@ Description: ${ticket.description}`;
     });
 
     const raw = response.choices[0].message.content;
+    console.log("[AI Agent]: Raw response received from AI.");
 
     // Improved JSON Extraction
     let jsonString = raw.trim();
@@ -75,6 +80,8 @@ Description: ${ticket.description}`;
     if (typeof notes === 'object' && notes !== null) {
       notes = JSON.stringify(notes, null, 2);
     }
+
+    console.log(`[AI Agent]: Analysis complete. Priority: ${parsed.priority}, Skills: ${parsed.relatedSkills?.length || 0}`);
 
     return {
       priority: parsed.priority?.toLowerCase() || "medium",
