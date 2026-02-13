@@ -1,6 +1,7 @@
 import { inngest } from "../inngest/client.js";
 import Ticket from "../models/ticket.js";
 import User from "../models/user.js";
+import { sendMail } from "../utils/mailer.js";
 
 export const createTicket = async (req, res) => {
   try {
@@ -150,6 +151,19 @@ export const updateTicketAssignment = async (req, res) => {
 
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    // Send email notification if assigned
+    if (ticket.assignedTo) {
+      try {
+        await sendMail(
+          ticket.assignedTo.email,
+          `Ticket Re-Assigned: ${ticket.title}`,
+          `Hi, you have been manually assigned a ticket by an Admin.\n\nDescription: ${ticket.description}\n\nPlease check your dashboard for details.`
+        );
+      } catch (err) {
+        console.error("Failed to send assignment email:", err);
+      }
     }
 
     return res.status(200).json({ ticket, message: "Ticket reassigned successfully" });

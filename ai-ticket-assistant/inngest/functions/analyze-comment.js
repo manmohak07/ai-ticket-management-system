@@ -2,16 +2,17 @@ import { inngest } from "../client.js";
 import Ticket from "../../models/ticket.js";
 import OpenAI from "openai";
 
-const token = process.env["GITHUB_TOKEN"];
-const endpoint = "https://models.github.ai/inference";
-const modelName = "openai/gpt-4o-mini";
-
 export const analyzeComment = inngest.createFunction(
     { id: "analyze-comment", retries: 1 },
     { event: "comment/analyze" },
     async ({ event, step }) => {
         try {
+            const token = process.env["GITHUB_TOKEN"];
+            const endpoint = "https://models.github.ai/inference";
+            const modelName = "openai/gpt-4o-mini";
+            
             const { ticketId, commentText } = event.data;
+            console.log(`[AI Comment Agent]: Analyzing content for ticket ID: ${ticketId}`);
 
             const ticket = await step.run("fetch-ticket", async () => {
                 return await Ticket.findById(ticketId);
@@ -50,6 +51,7 @@ Respond ONLY with one of these exact words: COMPLETE, IN_PROGRESS, NEEDS_INFO, o
             });
 
             const output = response.choices[0].message.content?.toUpperCase() || "";
+            console.log(`[AI Comment Agent]: Model decision: ${output}`);
 
             let analysis = "IN_PROGRESS";
             if (output.includes("COMPLETE")) analysis = "COMPLETE";
@@ -78,6 +80,7 @@ Respond ONLY with one of these exact words: COMPLETE, IN_PROGRESS, NEEDS_INFO, o
                         }
                     }
                 });
+                console.log(`[AI Comment Agent]: Updated ticket status to: ${newStatus}`);
                 return newStatus;
             });
 

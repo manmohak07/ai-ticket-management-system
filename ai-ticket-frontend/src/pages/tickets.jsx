@@ -124,12 +124,20 @@ export default function Tickets() {
           </div>
           <div className="flex gap-3 items-center">
             {user?.role === "admin" && (
-              <Link
-                to="/admin"
-                className="px-4 py-2 rounded-full border border-gray-700 hover:bg-gray-900 transition-colors text-sm font-medium"
-              >
-                Admin Panel
-              </Link>
+              <>
+                <Link
+                  to="/admin"
+                  className="px-4 py-2 rounded-full border border-gray-700 hover:bg-gray-900 transition-colors text-sm font-medium"
+                >
+                  Admin Panel
+                </Link>
+                <Link
+                  to="/analytics"
+                  className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 text-blue-400 hover:border-blue-500/50 transition-colors text-sm font-medium"
+                >
+                  Analytics
+                </Link>
+              </>
             )}
             <button
               onClick={handleLogout}
