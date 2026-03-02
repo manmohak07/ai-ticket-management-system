@@ -10,6 +10,7 @@ import Login from "./pages/login.jsx";
 import Signup from "./pages/signup.jsx";
 import Admin from "./pages/admin.jsx";
 import Analytics from "./pages/analytics.jsx";
+import Calendar from "./pages/calendar.jsx";
 import Landing from "./pages/landing.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -69,6 +70,14 @@ createRoot(document.getElementById("root")).render(
           element={
             <CheckAuth protected={true}>
               <Analytics />
+            </CheckAuth>
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            <CheckAuth protected={true}>
+              <Calendar />
             </CheckAuth>
           }
         />

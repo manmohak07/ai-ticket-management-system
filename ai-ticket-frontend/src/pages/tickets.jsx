@@ -123,6 +123,12 @@ export default function Tickets() {
             </div>
           </div>
           <div className="flex gap-3 items-center">
+            <Link
+              to="/calendar"
+              className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-500/30 text-purple-400 hover:border-purple-500/50 transition-colors text-sm font-medium"
+            >
+              📅 Calendar
+            </Link>
             {user?.role === "admin" && (
               <>
                 <Link

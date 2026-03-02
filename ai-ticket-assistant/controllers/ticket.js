@@ -2,6 +2,7 @@ import { inngest } from "../inngest/client.js";
 import Ticket from "../models/ticket.js";
 import User from "../models/user.js";
 import { sendMail } from "../utils/mailer.js";
+import { isUserOnLeave } from "./leave.js";
 
 export const createTicket = async (req, res) => {
   try {
@@ -166,7 +167,20 @@ export const updateTicketAssignment = async (req, res) => {
       }
     }
 
-    return res.status(200).json({ ticket, message: "Ticket reassigned successfully" });
+    // Check if the assigned user is on leave and warn the admin
+    let onLeaveWarning = null;
+    if (assignedTo) {
+      const onLeave = await isUserOnLeave(assignedTo);
+      if (onLeave) {
+        onLeaveWarning = "⚠️ Warning: This user is currently on approved leave. The ticket has been assigned, but they may not be available.";
+      }
+    }
+
+    return res.status(200).json({
+      ticket,
+      message: "Ticket reassigned successfully",
+      warning: onLeaveWarning,
+    });
   } catch (error) {
     console.error("Error updating ticket assignment", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
