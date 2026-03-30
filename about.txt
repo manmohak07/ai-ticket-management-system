@@ -43,6 +43,26 @@ Description: Enables administrators to manage user roles and capabilities.
 Input: User ID, Target Role (e.g., Moderator, Admin), Skills List.
 Output: Updated user profile with new roles and skills.
 
+9. Employee Leave Request
+Description: Allows an employee to submit a leave request through the platform by specifying the dates and reason for absence.
+Input: Employee ID, Leave Start Date, Leave End Date, Reason for Leave and Leavetype.
+Output: Leave request record created with status 'Pending'. Platform Admin notified automatically via email.
+
+10. Admin Notification for Leave Request
+Description: When an employee submits a leave request, Platform Admin 1 receives an automated email notification to review and take action on it.
+Input: Leave Request Event, Employee Details, Leave Dates, Admin Email Address.
+Output: Email sent to Admin containing Employee Name, Requested Leave Dates, and Reason.
+
+11. Admin Leave Approval / Rejection
+Description: The Admin can approve or reject an employee's leave request from the dashboard. If approved, the leave dates are synced to the Calendar.
+Input: Leave Request ID, Decision (Approve / Reject).
+Output: If Approved — Leave status updated to 'Approved', dates blocked in Calendar, employee notified. If Rejected — Leave status updated to 'Rejected', employee notified.
+
+12. AI Ticket Assignment with Calendar Availability Check
+Description: When AI assigns a ticket, it first checks the Calendar to verify the skill-matched employee is not on approved leave. If that employee is unavailable, AI checks the next available employee of the same domain. If none available, ticket falls back to Admin.
+Input: AI-Enriched Ticket Data (Required Skills, Assignment Date), Employee Skill Profiles, Calendar Availability Records.
+Output: Ticket assigned to an available and skill-matched employee. If preferred employee is on leave, system finds the next available one from the same domain. If none found, ticket assigned to Admin.
+
 Non-Functional Requirements
 
 Tools & Technology Stack:

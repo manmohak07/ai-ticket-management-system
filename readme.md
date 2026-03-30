@@ -6,7 +6,7 @@ Welcome to the AI-Powered Ticket Management System! This project is a web applic
 
 A smart ticket management system that uses AI to automatically categorize, prioritize, and assign support tickets to the most appropriate moderators.
 
-## 🚀 Features
+## Features
 
 - **AI-Powered Ticket Processing**
 
@@ -32,7 +32,17 @@ A smart ticket management system that uses AI to automatically categorize, prior
   - Automated email notifications
   - Asynchronous ticket processing
 
-## 🛠️ Tech Stack
+- **AI Comment Analysis**
+  - Automatic analysis of ticket comments
+  - Actionable insights and recommendations based on comment content
+  - Enhanced ticket resolution through AI-driven comment processing
+
+- **Leave Management**
+  - Employee leave request submission
+  - Admin approval/rejection workflow
+  - Calendar integration to prevent ticket assignment during leave periods
+
+## Tech Stack
 
 - **Backend**: Node.js with Express
 - **Database**: MongoDB
@@ -49,7 +59,7 @@ A smart ticket management system that uses AI to automatically categorize, prior
 - Google Gemini API key
 - Mailtrap account (for email testing)
 
-## ⚙️ Installation
+## Installation
 
 1. **Clone the repository**
 
@@ -87,7 +97,7 @@ A smart ticket management system that uses AI to automatically categorize, prior
    APP_URL=http://localhost:3000
    ```
 
-## 🚀 Running the Application
+## Running the Application
 
 1. **Start the main server**
 
@@ -118,7 +128,14 @@ A smart ticket management system that uses AI to automatically categorize, prior
 - `GET /api/auth/users` - Get all users (Admin only)
 - `POST /api/auth/update-user` - Update user role & skills (Admin only)
 
-## 🔄 Ticket Processing Flow
+### Leave
+
+- `POST /api/leave` - Submit a leave request
+- `GET /api/leave` - Get leave requests (Admin only)
+- `POST /api/leave/:id/approve` - Approve leave request (Admin only)
+- `POST /api/leave/:id/reject` - Reject leave request (Admin only)
+
+## Ticket Processing Flow
 
 1. **Ticket Creation**
 
@@ -138,15 +155,16 @@ A smart ticket management system that uses AI to automatically categorize, prior
 3. **Moderator Assignment**
 
    - System searches for moderators with matching skills
+   - Checks calendar for availability (no approved leave)
    - Uses regex-based skill matching
-   - Falls back to admin if no match found
+   - Falls back to next available moderator or admin if preferred is unavailable
    - Updates ticket with assignment
 
 4. **Notification**
    - Sends email to assigned moderator
    - Includes ticket details and AI-generated notes
 
-## 🧪 Testing
+## Testing
 
 1. **Start the Inngest dev server**
 
@@ -167,7 +185,7 @@ A smart ticket management system that uses AI to automatically categorize, prior
    }'
    ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -192,7 +210,7 @@ A smart ticket management system that uses AI to automatically categorize, prior
    - Check SMTP settings
    - Monitor email delivery logs
 
-## 📚 Dependencies
+## Dependencies
 
 - `@inngest/agent-kit`: ^0.7.3
 - `bcrypt`: ^5.1.1
